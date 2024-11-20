@@ -1,28 +1,48 @@
-from PIL import Image, ExifTags
+class Student:
+    def __init__(self, name, surname, gender):
+        self.name = name
+        self.surname = surname
+        self.gender = gender
+        self.finished_courses = []
+        self.courses_in_progress = []
+        self.grades = {}
+        
+class Mentor:
+    def __init__(self, name, surname):
+        self.name = name
+        self.surname = surname
+        self.courses_attached = []
 
-img = Image.open("PAm.jpg")
-exif_data = img._getexif()
+class Lecturer(Mentor):
+    def __init__(self, name, surname, courses_attached):
+        self.name = name
+        self.surname = surname
+        self.courses_attached = []
 
-if exif_data:
-    exif = {ExifTags.TAGS[k]: v for k, v in exif_data.items() if k in ExifTags.TAGS}
-    print(exif)
-else:
-    exif = {}
+class Reviewer(Mentor):
+    def __init__(self, name, surname, courses_attached):
+        self.name = name
+        self.surname = surname
+        self.courses_attached = []                 
+    
+    def rate_hw(self, student, course, grade):
+        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+            if course in student.grades:
+                student.grades[course] += [grade]
+            else:
+                student.grades[course] = [grade]
+        else:
+            return 'Ошибка'
 
-if "GPSInfo" in exif:
-    def gps_info_to_string(gps_info):
-        lat_degrees, lat_minutes, lat_seconds = gps_info[2]
-        lat_direction = gps_info[1]
-
-        lon_degrees, lon_minutes, lon_seconds = gps_info[4]
-        lon_direction = gps_info[3]
-
-        latitude_str = f"{int(lat_degrees)}°{int(lat_minutes)}'{float(lat_seconds):.2f}\" {lat_direction}"
-        longitude_str = f"{int(lon_degrees)}°{int(lon_minutes)}'{float(lon_seconds):.2f}\" {lon_direction}"
-
-        return f"{latitude_str}, {longitude_str}"
-
-    gps_string = gps_info_to_string(exif["GPSInfo"])
-    print(gps_string)
-else:
-    print("No info found")
+best_student = Student('Ruoy', 'Eman', 'your_gender')
+best_student.courses_in_progress += ['Python']
+ 
+cool_mentor = Mentor('Some', 'Buddy')
+cool_mentor.courses_attached += ['Python']
+ 
+cool_mentor.rate_hw(best_student, 'Python', 10)
+cool_mentor.rate_hw(best_student, 'Python', 10)
+cool_mentor.rate_hw(best_student, 'Python', 10)
+ 
+print(best_student.grades)
+print(self.name(Reviewers))
